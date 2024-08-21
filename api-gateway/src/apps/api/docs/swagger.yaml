@@ -1,0 +1,86 @@
+basePath: /api
+definitions:
+  request.CreateUser:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  response.ErrorMessage:
+    properties:
+      error: {}
+      invalid_fields:
+        items:
+          $ref: '#/definitions/response.InvalidField'
+        type: array
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  response.ID:
+    properties:
+      id:
+        type: string
+    type: object
+  response.InvalidField:
+    properties:
+      description:
+        type: string
+      field_name:
+        type: string
+    type: object
+info:
+  contact:
+    email: gjs8@aluno.ifal.edu.br
+    name: Gabriel de Jesus
+  description: Go Kafka Playground API
+  title: Go Kafka Playground API
+  version: "1.0"
+paths:
+  /admin/user:
+    post:
+      consumes:
+      - application/json
+      description: Route responsible for creating a new user account
+      operationId: User.Create
+      parameters:
+      - description: JSON with all the data necessary to create a user account.
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Request made successfully.
+          schema:
+            $ref: '#/definitions/response.ID'
+        "400":
+          description: Poorly formulated request.
+          schema:
+            $ref: '#/definitions/response.ErrorMessage'
+        "422":
+          description: Some data entered could not be processed correctly.
+          schema:
+            $ref: '#/definitions/response.ErrorMessage'
+        "500":
+          description: An unexpected error has occurred. Please contact support.
+          schema:
+            $ref: '#/definitions/response.ErrorMessage'
+      security:
+      - bearerAuth: []
+      summary: Create a new user account
+      tags:
+      - Admin
+securityDefinitions:
+  bearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
